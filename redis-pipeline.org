@@ -1,9 +1,4 @@
 * redis pipeline
-
-:PROPERTIES:
-:Title:     redis pipeline
-
-
 ** 为什么会有 pipeline
 
 redis 协议是典型的 Request/Response protocol，即
