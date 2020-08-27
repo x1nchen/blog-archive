@@ -1,3 +1,7 @@
 * blog
 
 Only the inner waves, leaves some trace.
+
+Powered by Emacs
+
+

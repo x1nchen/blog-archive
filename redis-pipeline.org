@@ -1,0 +1,70 @@
+* redis pipeline
+
+:PROPERTIES:
+:Title:     redis pipeline
+
+
+** 为什么会有 pipeline
+
+redis 协议是典型的 Request/Response protocol，即
+
+Client: INCR X
+Server: 1
+Client: INCR X
+Server: 2
+Client: INCR X
+Server: 3
+Client: INCR X
+Server: 4
+
+
+A Request/Response server can be implemented so that it is able to process new
+requests even if the client didn't already read the old responses. This way it
+is possible to send multiple commands to the server without waiting for the
+replies at all, and finally read the replies in a single step.
+
+Client: INCR X
+Client: INCR X
+Client: INCR X
+Client: INCR X
+Server: 1
+Server: 2
+Server: 3
+Server: 4
+
+
+优化点
+
+1. RTT Round Trip Time
+2. read() and write() syscall, that means going from user land to kernel land.
+   The context switch is a huge speed penalty.
+
+
+** 实现原理
+
+
+
+
+
+** 典型使用场景
+
+*** 1. 多次 redis 操作之间没有关联
+*** 2. 对操作是否成功不敏感
+
+** TODO
+
+1. Non-Transactional pipeline 
+Transactional pipeline Multi?
+
+2. redis pipeline 在客户端可以同时写同时读吗？
+3. redis pipeline 客户端可以不读写操作的返回结果已满足更高效率的写入速度？
+
+
+
+
+** ref
+
+- Using pipelining to speedup Redis queries – Redis: https://redis.io/topics/pipelining
+- Redis Pipeline原理分析 https://www.cnblogs.com/jabnih/p/7157921.html
+
+
