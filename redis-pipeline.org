@@ -1,4 +1,5 @@
 * redis pipeline
+
 ** 为什么会有 pipeline
 
 redis 协议是典型的 Request/Response protocol，即
@@ -28,19 +29,13 @@ Server: 3
 Server: 4
 
 
-优化点
+这里的优化要点主要有两个
 
 1. RTT Round Trip Time
 2. read() and write() syscall, that means going from user land to kernel land.
    The context switch is a huge speed penalty.
 
-
 ** 实现原理
-
-
-
-
-
 ** 典型使用场景
 
 *** 1. 多次 redis 操作之间没有关联
@@ -53,9 +48,6 @@ Transactional pipeline Multi?
 
 2. redis pipeline 在客户端可以同时写同时读吗？
 3. redis pipeline 客户端可以不读写操作的返回结果已满足更高效率的写入速度？
-
-
-
 
 ** ref
 
