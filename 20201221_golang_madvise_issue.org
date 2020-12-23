@@ -83,6 +83,7 @@ GODEBUG=madvdontneed=1。具体见 https://github.com/golang/go/issues/28466
 使用 GODEBUG=madvdontneed=1 强制回退使用 MADV_DONTNEED，没有再出现内存泄漏问题。内存稳定在 200MB 左右
 
 
+* ref
 
-
+- 踩坑记：go服务内存暴涨_felix021 - SegmentFault 思否: https://segmentfault.com/a/1190000022472459
 
