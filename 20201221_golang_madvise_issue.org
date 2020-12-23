@@ -1,8 +1,14 @@
-* 生产环境服务内存泄漏问题调查
+#+TITLE: Golang 服务内存泄漏问题调查
+#+AUTHOR: ccx
+#+KEYWORDS: golang madvice
+#+OPTIONS: H:4 toc:t
+#+STARTUP: indent
+
+* Golang 服务内存泄漏问题调查
 
 记录下这个问题是因为这不同于传统典型的 Go 服务内存泄漏。
 
-8月15日前后，钉钉监控告警群不定时出现服务机器内存占用超 80% 告警，一开始以为是
+2020年8月15日前后，钉钉监控告警群不定时出现服务机器内存占用超 80% 告警，一开始以为是
 Prometheus exporter 堆积造成的，准备下掉 Prometheus exporter 的集成代码，后来觉
 得这个堆积速度太快了点，不到一天就吃掉 6GB，十分夸张，所以有空的时候用 gops 快照了
 一下，内存情况如下图
@@ -78,11 +84,18 @@ GODEBUG=madvdontneed=1。具体见 https://github.com/golang/go/issues/28466
 
 ====
 
-补充：8月24日
+20200824 更新
 
 使用 GODEBUG=madvdontneed=1 强制回退使用 MADV_DONTNEED，没有再出现内存泄漏问题。内存稳定在 200MB 左右
 
+====
+
+20210219 更新 
+
+Go 1.16 即将发布，默认使用 MADV_DONTNEED 方式，该问题在 Go 版本升级后自动解决。https://golang.org/doc/go1.16#runtime
 
 
+* ref
 
+- 踩坑记：go服务内存暴涨_felix021 - SegmentFault 思否: https://segmentfault.com/a/1190000022472459
 
