@@ -4,7 +4,7 @@
 #+OPTIONS: H:4 toc:t
 #+STARTUP: indent
 
-* Golang 服务内存泄漏问题调查
+* 调查过程记录和分析
 
 记录下这个问题是因为这不同于传统典型的 Go 服务内存泄漏。
 
@@ -82,15 +82,11 @@ GODEBUG=madvdontneed=1。具体见 https://github.com/golang/go/issues/28466
 
 阿里云机器内核 4.4.0-105-generic，而 aws 机器内核 4.15.0-1054-aws，刚好符合预期，可以解释。
 
-====
-
-20200824 更新
+* 20200824 更新
 
 使用 GODEBUG=madvdontneed=1 强制回退使用 MADV_DONTNEED，没有再出现内存泄漏问题。内存稳定在 200MB 左右
 
-====
-
-20210219 更新 
+* 20210219 更新
 
 Go 1.16 即将发布，默认使用 MADV_DONTNEED 方式，该问题在 Go 版本升级后自动解决。https://golang.org/doc/go1.16#runtime
 
