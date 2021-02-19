@@ -94,7 +94,6 @@ GODEBUG=madvdontneed=1。具体见 https://github.com/golang/go/issues/28466
 
 Go 1.16 即将发布，默认使用 MADV_DONTNEED 方式，该问题在 Go 版本升级后自动解决。https://golang.org/doc/go1.16#runtime
 
-
 * ref
 
 - 踩坑记：go服务内存暴涨_felix021 - SegmentFault 思否: https://segmentfault.com/a/1190000022472459
