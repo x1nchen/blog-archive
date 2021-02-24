@@ -1,0 +1,40 @@
+#+TITLE: golang atomic.add 的原子操作是如何实现的？
+#+AUTHOR: ccx
+#+KEYWORDS: golang atomic
+#+OPTIONS: H:4 toc:t
+#+STARTUP: indent
+
+这里以 atomic.AddInt64 为例
+
+函数声明在 sync/atomic/doc.go
+
+#+begin_src go
+func AddInt64(addr *int64, delta int64) (new int64)
+#+end_src
+
+该函数伪汇编实现 `sync/atomic/asm.s`
+
+#+begin_src go
+TEXT ·AddInt64(SB),NOSPLIT,$0
+  JMP  runtime∕internal∕atomic·Xadd64(SB)
+#+end_src
+
+runtime 的实现 `runtime/internal/atomic/asm_amd64.s`
+
+#+begin_src go
+TEXT runtime∕internal∕atomic·Xadd64(SB), NOSPLIT, $0-24
+  MOVQ  ptr+0(FP), BX           // 变量的地址
+  MOVQ  delta+8(FP), AX         // 增量
+  MOVQ  AX, CX                  // 增量保存在 CX
+  LOCK                          // 锁总线，多 CPU 排他执行指令
+  XADDQ  AX, 0(BX)              // 将变量原有的值赋值给AX，增量赋值给变量地址指向的值，然后求和保存到变量地址指向的地址。
+  ADDQ  CX, AX                  // 重新计算add之后的值保存到AX用于 return.
+  MOVQ  AX, ret+16(FP)
+  RET
+#+end_src 
+
+
+要点
+
+1. _LOCK：是一个指令前缀，其后必须跟一条“读-改-写”的指令，比如XADDQ、XCHG、CMPXCHG等。 这条指令表明封锁总线，对CPU缓存的访问将是排他的。_
+2. XADDQ：先交换再累加. (结果在第二个操作数里)
