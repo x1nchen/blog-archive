@@ -86,6 +86,7 @@ GODEBUG=madvdontneed=1。具体见 https://github.com/golang/go/issues/28466
 
 使用 GODEBUG=madvdontneed=1 强制回退使用 MADV_DONTNEED，没有再出现内存泄漏问题。内存稳定在 200MB 左右
 
+
 * 20210219 更新
 
 Go 1.16 即将发布，默认使用 MADV_DONTNEED 方式，该问题在 Go 版本升级后自动解决。https://golang.org/doc/go1.16#runtime

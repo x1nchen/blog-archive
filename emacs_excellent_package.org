@@ -1,0 +1,37 @@
+#+TITLE: emacs package 使用记录
+#+AUTHOR: ccx
+#+KEYWORDS: emacs
+#+OPTIONS: H:4 toc:t
+#+STARTUP: indent
+
+* emacs-smart-input-source
+
+https://github.com/laishulu/emacs-smart-input-source
+
+这个包在中文输入环境下很有用，特别是频繁使用 C-c / C-x / C-h / M-x 几种 leading key 时，会主动切换到英文输入方式
+
+使用的配置如下，这里关闭了 sis-global-inline-mod，因为这种模式下输入中文时空格会
+导致切换到英文输入法并且这个空格的 region 被选中，和其他应用的输入习惯有差异
+  
+#+begin_src lisp
+(sis-ism-lazyman-config
+
+ ;; English input source may be: "ABC", "US" or another one.
+ ;; "com.apple.keylayout.ABC"
+ "com.apple.keylayout.US"
+
+ ;; Other language input source: "rime", "sogou" or another one.
+ ;; "im.rime.inputmethod.Squirrel.Rime"
+ "im.rime.inputmethod.Squirrel.Rime")
+
+;; enable the /cursor color/ mode
+(sis-global-cursor-color-mode t)
+;; enable the /respect/ mode
+(sis-global-respect-mode t)
+;; enable the /context/ mode for all buffers
+(sis-global-context-mode t)
+;; enable the /inline english/ mode for all buffers
+;;(sis-global-inline-mode t)
+#+end_src
+
+
