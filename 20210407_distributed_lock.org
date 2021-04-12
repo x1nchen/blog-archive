@@ -25,15 +25,19 @@
 
 > LOCK
 
+#+begin_src bash
 SET resource_name random_value NX PX [TTL]
+#+end_src
 
 > UNLOCK
 
+#+begin_src bash
 if redis.call("get",KEYS[1]) == ARGV[1] then
     return redis.call("del",KEYS[1])
 else
     return 0
 end
+#+end_src
 
 问题
 
@@ -51,8 +55,9 @@ code
 
 https://github.com/etcd-io/etcd/blob/master/client/v3/concurrency/mutex.go#L107-L128
 
-lock 操作大致是这样执行一个 transaction 
+lock 操作大致是这样执行一个 transaction
 
+#+begin_src bash
 Txn(TxnRequest {
     compare = {
         {compareType = equal, key = /lock/leaseid, create_revision = 0},
@@ -68,6 +73,7 @@ Txn(TxnRequest {
         {RangeRequest { key = /lock}
     },
 )
+#+end_src
 
 ** etcd 相对于 redis 的优点
 
