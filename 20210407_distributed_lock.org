@@ -1,0 +1,87 @@
+#+TITLE: 分布式锁技术研究
+#+AUTHOR: ccx
+#+KEYWORDS: index
+#+STARTUP: indent
+#+OPTIONS: H:4 toc:t 
+
+** 前置知识
+
+- 自旋锁
+- 公平锁和非公平锁
+- 可重入锁 同一个进程可对同一把锁加N次锁，解锁也需要N次
+
+** 分布式锁特性
+
+分布式锁应具备以下特点：
+
+- 互斥性：任意时刻，同一个锁，只有一个进程能持有
+- 安全性：避免死锁，当进程没有主动释放锁（进程崩溃退出），保证其他进程能够加锁
+- 可用性：当提供锁的服务节点故障（宕机）时，“热备” 节点能够接替故障的节点继续提供服务，并保证自身持有的数据与故障节点一致。
+- 对称性：对同一个锁，加锁和解锁必须是同一个进程，即不能把其他进程持有的锁给释放了
+
+我们分别来看下 redis 和 etcd 如何实现这些特性
+
+** redis
+
+> LOCK
+
+SET resource_name random_value NX PX [TTL]
+
+> UNLOCK
+
+if redis.call("get",KEYS[1]) == ARGV[1] then
+    return redis.call("del",KEYS[1])
+else
+    return 0
+end
+
+问题
+
+1. 单点的情况缺陷是什么？如何解决？
+2. keepalive 如何实现？ PEXPIRE key [TTL]
+
+
+** redis Redlock
+
+https://redis.io/topics/distlock
+
+** etcd
+
+code
+
+https://github.com/etcd-io/etcd/blob/master/client/v3/concurrency/mutex.go#L107-L128
+
+lock 操作大致是这样执行一个 transaction 
+
+Txn(TxnRequest {
+    compare = {
+        {compareType = equal, key = /lock/leaseid, create_revision = 0},
+    },
+    // if the comparison succeeds, put /lock/leaseid = ""
+    success = {
+        {PutRequest { key = /lock/leaseid, value = "" },
+        {RangeRequest { key = /lock},
+    },
+    // if the comparison fails, get foo2=fail
+    failure = {
+        {RangeRequest { key = /lock/leaseid},
+        {RangeRequest { key = /lock}
+    },
+)
+
+** etcd 相对于 redis 的优点
+
+1. 安全性
+2. 惊群效应
+
+** etcd 分布式锁线上故障、原因分析以及解决方法
+
+pass
+
+** ref
+
+- Distributed locks with Redis – Redis: https://redis.io/topics/distlock
+- Distributed Locking: https://tech.ipalfish.com/blog/2020/03/30/distributed-locking/
+- redis分布式锁3种实现方式对比分析总结 – Young's blog – collect: https://young17.github.io/backup/2020-1-28-redis_distributed_locks/
+- 基于Redis的分布式锁和Redlock算法  https://juejin.cn/post/6844904039218429960
+- 分布式锁的实现及原理 · GopherChina: https://gocn.vip/topics/9343
