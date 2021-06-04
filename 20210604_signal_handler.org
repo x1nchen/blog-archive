@@ -1,4 +1,4 @@
-#+TITLE: RCA  集成 gops 的 go-micro 服务后 AfterStop 自定义函数不会执行的问题
+#+TITLE: [RCA] 集成 gops 的 go-micro 服务后 AfterStop 自定义函数不会执行的问题
 #+AUTHOR: ccx
 #+KEYWORDS: RCA
 #+STARTUP: indent
