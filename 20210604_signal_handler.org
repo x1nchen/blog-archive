@@ -1,15 +1,12 @@
-#+TITLE: RCA go-micro integrated service exit abnomally
+#+TITLE: RCA  集成 gops 的 go-micro 服务后 AfterStop 自定义函数不会执行的问题
 #+AUTHOR: ccx
 #+KEYWORDS: RCA
 #+STARTUP: indent
 #+OPTIONS: H:4 toc:t 
 
-
-RCA report: 集成 gops 的 go-micro 服务后 AfterStop 自定义函数不会执行的问题
-
 遇到一个很有意思的问题，在此记录一下。
 
-TLDR: golang 服务通过 signal.Notify 注册 signal handler 的行为有且只有一次，否则会出现不可预知的行为。
+_TLDR: golang 服务通过 signal.Notify 注册 signal handler 的行为有且只有一次，否则会出现不可预知的行为。_
 
 * 前情提要
 
@@ -17,7 +14,7 @@ TLDR: golang 服务通过 signal.Notify 注册 signal handler 的行为有且只
 
 另一方面，我们在生产环境也对每个服务集成了 gops ，这个工具极大了提升了服务的可观察性。
 
-* 问题
+* 问题描述
 
 某天，某位细心的同事告知 micro.AfterStop 自定义函数在容器重启时，并没有执行。现场复现确认问题存在。
 
