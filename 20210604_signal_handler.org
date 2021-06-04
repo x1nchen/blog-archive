@@ -132,7 +132,7 @@ func gracefulShutdown() {
 
 知道 root cause 之后就好解决了，移除 gops 的 signal handler 就好了。
 
-恰好 gops 为此提供了一个 option 选项，那我们关闭就好了。退出 main goroutine 前，主动调用 agent.Close()
+恰好 gops 为此提供了一个 option 选项，那我们 disable 掉。注意退出 main goroutine 前，主动调用 agent.Close()
 
 #+begin_src go
 if opts.ShutdownCleanup {
